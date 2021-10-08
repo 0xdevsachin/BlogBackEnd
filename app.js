@@ -8,6 +8,7 @@ app.use(cors());
 
 
 app.post('/api', (req, res) => {
+    console.log(req.body);
     res.send("Api Call Recieved")
     console.log("React Request ")
 })
