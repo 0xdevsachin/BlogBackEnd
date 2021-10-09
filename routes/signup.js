@@ -6,7 +6,11 @@ var userSchema = require('../models/user')
 router.post('/auth/signup', async function(req, res) {
     var email = await userSchema.findOne({ email: req.body.email })
     var user = await userSchema.findOne({ username: req.body.username })
-    if (user) {
+    const saveData = new userSchema(req.body);
+    if (req.body.username == '' || req.body.email == '' || req.body.password == '' || req.body.cpassword == '') {
+        res.send({ msg: "Something Went Wrong ", redirect: true })
+        console.log(saveData);
+    } else if (user) {
         res.send({ msg: "Username Already Taken", redirect: false })
         console.log("user is already taken")
     } else if (email) {
@@ -16,7 +20,6 @@ router.post('/auth/signup', async function(req, res) {
         res.send("Password and Confirm Password must be same")
     } else {
         res.send({ msg: "Account Registered Succesfully", redirect: true })
-        const saveData = new userSchema(req.body);
         saveData.save().then(() => {
             console.log(saveData);
         }).catch((err) => {
