@@ -1,6 +1,5 @@
 var express = require('express')
 var router = express.Router();
-const { findOne } = require('../models/user');
 var userSchema = require('../models/user')
 
 router.post('/auth/signup', async function(req, res) {
