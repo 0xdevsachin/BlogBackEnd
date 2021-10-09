@@ -1,15 +1,15 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3300;
+const PORT = process.env.PORT;
 var signup = require('./routes/signup')
 const db = require('./config/db')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 db().then(() => {
-    app.listen(3300, () => {
-        console.log('Server started at http://localhost:3300')
+    app.listen(PORT, () => {
+        console.log(`Server started at http://localhost:${PORT}`)
         console.log('DB Connected successfully');
     })
 }).catch((err) => {
