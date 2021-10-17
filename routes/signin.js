@@ -5,7 +5,8 @@ var userSchema = require('../models/user')
 
 router.post('/auth/signin', async function(req, res) {
     var pass = await userSchema.findOne({ password: req.body.password })
-    var user = await userSchema.findOne({ username: req.body.username })
+    var user = await userSchema.find({ username: req.body.username })
+    console.log((user[0]._id).valueOf())
     if (req.body.username === '' || req.body.password === '') {
         res.send({ msg: "Something Went Wrong ", redirect: true })
     } else if (!user) {
@@ -15,7 +16,7 @@ router.post('/auth/signin', async function(req, res) {
         res.send({ msg: "Password Mis Match", redirect: false })
         console.log("password not found ")
     } else {
-        res.send({ msg: "Login Succesfully", redirect: true })
+        res.send({ msg: "Login Succesfully", user, redirect: true })
     }
 })
 

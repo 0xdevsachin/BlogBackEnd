@@ -8,11 +8,12 @@ const db = require('./config/db')
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
+app.listen(PORT, () => {
+    console.log(`Server started at http://localhost:${PORT}`)
+})
+
 db().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server started at http://localhost:${PORT}`)
-        console.log('DB Connected successfully');
-    })
+    console.log('DB Connected successfully');
 }).catch((err) => {
     console.log(err);
 })
