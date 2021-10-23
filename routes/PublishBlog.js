@@ -14,5 +14,14 @@ router.post('/PublishBlog', async function(req, res) {
         });
     }
 })
+router.get('/Getblog', async function(req, res) {
+    const data = await blog.find();
+    res.send(data);
+})
+router.get('/Getblog/:id', async function(req, res) {
+    const data = await blog.findOne({ _id: req.params.id });
+    console.log(data);
+    res.send(data);
+})
 
 module.exports = router
