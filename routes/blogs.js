@@ -32,11 +32,30 @@ router.get('/Getblog/:id', async function(req, res) {
     const data = await blog.findOne({ _id: req.params.id }).catch((err) => {
         console.log("Error !")
     });
+    const user = await userSchema.findOne({ _id: data.userID })
     if (!data) {
-        res.send({ msg: "Sorry! Blog Not Found", code: 404 })
+        res.send({ msg: "Sorry! Blog Not Found", user: '', code: 404 })
     } else {
-        res.send(data);
+        res.send({ msg: data, user: user.username, code: 200 });
     }
 })
 
+router.post('/getuserblog/:id', async function(req, res) {
+    const data = await userSchema.findOne({ _id: req.params.id }).catch((err) => {
+        console.log("Error !")
+    });
+    if (data) {
+        const userBlogs = await blog.find({ userID: req.params.id })
+        res.send(userBlogs);
+    }
+    console.log(data);
+})
+
+router.delete('/deleteBlog/:id', async function(req, res) {
+    await blog.deleteOne({ _id: req.params.id }).then(() => {
+        console.log("Blog Removed")
+    }).catch((err) => {
+        console.log(err);
+    })
+})
 module.exports = router
