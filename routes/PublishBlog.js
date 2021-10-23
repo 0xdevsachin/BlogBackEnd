@@ -19,9 +19,14 @@ router.get('/Getblog', async function(req, res) {
     res.send(data);
 })
 router.get('/Getblog/:id', async function(req, res) {
-    const data = await blog.findOne({ _id: req.params.id });
-    console.log(data);
-    res.send(data);
+    const data = await blog.findOne({ _id: req.params.id }).catch((err) => {
+        console.log("Error !")
+    });
+    if (!data) {
+        res.send({ msg: "Sorry! Blog Not Found", code: 404 })
+    } else {
+        res.send(data);
+    }
 })
 
 module.exports = router
