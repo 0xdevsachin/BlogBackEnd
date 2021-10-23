@@ -11,6 +11,10 @@ const BlogSchema = mongoose.Schema({
     BlogContent: {
         type: String,
         require: true,
+    },
+    userID: {
+        type: String,
+        require: true,
     }
 })
 
