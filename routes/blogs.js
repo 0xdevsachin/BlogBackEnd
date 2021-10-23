@@ -32,11 +32,10 @@ router.get('/Getblog/:id', async function(req, res) {
     const data = await blog.findOne({ _id: req.params.id }).catch((err) => {
         console.log("Error !")
     });
-    const user = await userSchema.findOne({ _id: data.userID })
     if (!data) {
-        res.send({ msg: "Sorry! Blog Not Found", user: '', code: 404 })
+        res.send({ msg: "Sorry! Blog Not Found", code: 404 })
     } else {
-        res.send({ msg: data, user: user.username, code: 200 });
+        res.send({ msg: data, code: 200 });
     }
 })
 
