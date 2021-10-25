@@ -15,6 +15,10 @@ const BlogSchema = mongoose.Schema({
     userID: {
         type: String,
         require: true,
+    },
+    PublishName: {
+        type: String,
+        require: true,
     }
 })
 

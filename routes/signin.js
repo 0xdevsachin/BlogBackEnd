@@ -4,19 +4,25 @@ var userSchema = require('../models/user')
 
 
 router.post('/auth/signin', async function(req, res) {
-    var pass = await userSchema.findOne({ password: req.body.password })
-    var user = await userSchema.find({ username: req.body.username })
+    var user = await userSchema.findOne({ username: req.body.username }).catch((err) => {
+        console.log(err)
+    })
+
     if (req.body.username === '' || req.body.password === '') {
         res.send({ msg: "Something Went Wrong ", redirect: true })
-    } else if (!user) {
-        res.send({ msg: "User not Exist", redirect: false })
-        console.log("user not found")
-    } else if (!pass) {
-        res.send({ msg: "Password Mis Match", redirect: false })
-        console.log("password not found ")
-    } else {
-        res.send({ msg: "Login Succesfully", user, redirect: true })
     }
+    if (user) {
+        var pass = user.password
+        if (pass !== req.body.password) {
+            res.send({ msg: "Password Mis Match", redirect: false })
+            console.log("password not found ")
+        }
+        res.send({ msg: "Login Succesfully", user, redirect: true })
+    } else {
+        res.send({ msg: "USer Does not Exist", redirect: false })
+        console.log("User not exist ")
+    }
+
 })
 
 module.exports = router

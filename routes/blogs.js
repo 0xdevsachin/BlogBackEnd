@@ -4,7 +4,6 @@ var blog = require('../models/blog')
 var userSchema = require('../models/user')
 
 router.post('/PublishBlog', async function(req, res) {
-    console.log(req.body.userID)
     var id = await userSchema.findOne({ _id: req.body.userID }).catch((err) => {
         console.log("Error !")
         res.send({ msg: "Something Went Wrong !", redirect: true })
@@ -13,9 +12,7 @@ router.post('/PublishBlog', async function(req, res) {
         if (req.body.BlogTitle != '' && req.body.BlogContent != '') {
             var data = new blog(req.body);
             data.save().then((result) => {
-                console.log("Data Saved");
                 res.send({ msg: "Blog Published Successfully !", redirect: false })
-                console.log(result);
             }).catch((err) => {
                 console.log("Error !");
             });
@@ -47,7 +44,6 @@ router.post('/getuserblog/:id', async function(req, res) {
         const userBlogs = await blog.find({ userID: req.params.id })
         res.send(userBlogs);
     }
-    console.log(data);
 })
 
 router.delete('/deleteBlog/:id', async function(req, res) {
