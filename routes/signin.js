@@ -14,12 +14,13 @@ router.post('/auth/signin', async function(req, res) {
     if (user) {
         var pass = user.password
         if (pass !== req.body.password) {
-            res.send({ msg: "Password Mis Match", redirect: false })
-            console.log("password not found ")
+            res.send({ msg: "Invalid Credentials", redirect: false })
+            console.log("password not found")
+            return;
         }
         res.send({ msg: "Login Succesfully", user, redirect: true })
     } else {
-        res.send({ msg: "USer Does not Exist", redirect: false })
+        res.send({ msg: "User Does not Exist", redirect: false })
         console.log("User not exist ")
     }
 

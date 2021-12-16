@@ -10,11 +10,11 @@ router.post('/auth/signup', async function(req, res) {
         res.send({ msg: "Something Went Wrong ", redirect: true })
         console.log(saveData);
     } else if (user) {
-        res.send({ msg: "Username Already Taken", redirect: false })
-        console.log("user is already taken")
+        res.send({ msg: "Username Already Exist", redirect: false })
+        console.log("user is already exist")
     } else if (email) {
-        res.send({ msg: "Email Already Taken", redirect: false })
-        console.log("email is already taken")
+        res.send({ msg: "Email Already Exist", redirect: false })
+        console.log("email is already exist")
     } else if (req.body.password !== req.body.cpassword) {
         res.send("Password and Confirm Password must be same")
     } else {
