@@ -24,7 +24,8 @@ router.post('/auth/signin', async function(req, res) {
             const data = {
                 user : user
             }
-            const authtoken = jwt.sign(data, process.env.JWT_SECRET)
+            // set Expiration time in JWT Token (Default : 5 minutes)
+            const authtoken = jwt.sign(data, process.env.JWT_SECRET, {expiresIn : process.env.Expires_IN || "300s"})
             res.send({ msg: "Login Succesfully", user, authtoken, redirect: true })
         }
     } else {

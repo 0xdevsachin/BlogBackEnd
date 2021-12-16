@@ -2,8 +2,10 @@ var express = require('express')
 var router = express.Router()
 var blog = require('../models/blog')
 var userSchema = require('../models/user')
+var userAuth = require('../middleware/userauth')
 
-router.post('/PublishBlog', async function(req, res) {
+// Saving the Blog 
+router.post('/PublishBlog', userAuth, async function(req, res) {
     var id = await userSchema.findOne({ _id: req.body.userID }).catch((err) => {
         console.log("Error !")
         res.send({ msg: "Something Went Wrong !", redirect: true })
@@ -21,10 +23,16 @@ router.post('/PublishBlog', async function(req, res) {
         res.send({ msg: "Something Went Wrong !", redirect: true })
     }
 })
+
+// Get All Blogs for Public Page
+
 router.get('/Getblog', async function(req, res) {
     const data = await blog.find();
     res.send(data);
 })
+
+
+// Get the specific blog with id 
 router.get('/Getblog/:id', async function(req, res) {
     const data = await blog.findOne({ _id: req.params.id }).catch((err) => {
         console.log("Error !")
@@ -36,17 +44,21 @@ router.get('/Getblog/:id', async function(req, res) {
     }
 })
 
-router.post('/getuserblog/:id', async function(req, res) {
+// Dashboard Route
+router.post('/getuserblog/:id', userAuth, async function(req, res) {
     const data = await userSchema.findOne({ _id: req.params.id }).catch((err) => {
         console.log("Error !")
     });
     if (data) {
         const userBlogs = await blog.find({ userID: req.params.id })
         res.send(userBlogs);
+    }else{
+        res.send([])
     }
 })
 
-router.delete('/deleteBlog/:id', async function(req, res) {
+// Delete Blog with Specific ID
+router.delete('/deleteBlog/:id',userAuth, async function(req, res) {
     await blog.deleteOne({ _id: req.params.id }).then(() => {
         console.log("Blog Removed")
     }).catch((err) => {
