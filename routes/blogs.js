@@ -6,17 +6,25 @@ var userAuth = require('../middleware/userauth')
 
 // Saving the Blog 
 router.post('/PublishBlog', userAuth, async function(req, res) {
-    var id = await userSchema.findOne({ _id: req.body.userID }).catch((err) => {
+    var id = await userSchema.findOne({ _id: req.user._id }).catch((err) => {
         console.log("Error !")
         res.send({ msg: "Something Went Wrong !", redirect: true })
     });
     if (id) {
-        if (req.body.BlogTitle != '' && req.body.BlogContent != '') {
-            var data = new blog(req.body);
+        if (req.body.BlogTitle !== '' && req.body.BlogContent !== '') {
+            console.log(req.body.BlogTitle)
+            var data = new blog({
+                BlogTitle : req.body.BlogTitle,
+                BlogContent : req.body.BlogContent,
+                BlogImage : req.body.BlogImage,
+                PublishName : req.body.PublishName,
+                user : req.user._id
+            });
             data.save().then((result) => {
+                console.log(result);
                 res.send({ msg: "Blog Published Successfully !", redirect: false })
             }).catch((err) => {
-                console.log("Error !");
+                console.log(err);
             });
         }
     } else {
@@ -50,7 +58,7 @@ router.post('/getuserblog/:id', userAuth, async function(req, res) {
         console.log("Error !")
     });
     if (data) {
-        const userBlogs = await blog.find({ userID: req.params.id })
+        const userBlogs = await blog.find({ user: req.params.id })
         res.send(userBlogs);
     }else{
         res.send([])

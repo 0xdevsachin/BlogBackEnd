@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const {Schema} = mongoose;
 const BlogSchema = mongoose.Schema({
     BlogTitle: {
         type: String,
@@ -12,9 +12,9 @@ const BlogSchema = mongoose.Schema({
         type: String,
         require: true,
     },
-    userID: {
-        type: String,
-        require: true,
+    user: {
+        type: Schema.Types.ObjectID,
+        ref: 'users',
     },
     PublishName: {
         type: String,
