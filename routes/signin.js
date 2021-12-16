@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var userSchema = require('../models/user')
+const bcrypt = require('bcryptjs')
 
 
 router.post('/auth/signin', async function(req, res) {
@@ -13,12 +14,14 @@ router.post('/auth/signin', async function(req, res) {
     }
     if (user) {
         var pass = user.password
-        if (pass !== req.body.password) {
+        // comapring using Bcrypt JS
+        const password = await bcrypt.compare(req.body.password, pass)
+        if (!password) {
             res.send({ msg: "Invalid Credentials", redirect: false })
-            console.log("password not found")
-            return;
         }
-        res.send({ msg: "Login Succesfully", user, redirect: true })
+        else{
+            res.send({ msg: "Login Succesfully", user, redirect: true })
+        }
     } else {
         res.send({ msg: "User Does not Exist", redirect: false })
         console.log("User not exist ")

@@ -1,11 +1,12 @@
 var express = require('express')
 var router = express.Router();
 var userSchema = require('../models/user')
+const bcrypt = require('bcryptjs')
 
 router.post('/auth/signup', async function(req, res) {
+    console.log(req.body);
     var email = await userSchema.findOne({ email: req.body.email })
     var user = await userSchema.findOne({ username: req.body.username })
-    const saveData = new userSchema(req.body);
     if (req.body.username == '' || req.body.email == '' || req.body.password == '' || req.body.cpassword == '') {
         res.send({ msg: "Something Went Wrong ", redirect: true })
         console.log(saveData);
@@ -19,10 +20,18 @@ router.post('/auth/signup', async function(req, res) {
         res.send("Password and Confirm Password must be same")
     } else {
         res.send({ msg: "Account Registered Succesfully", redirect: true })
+        //Generating Salt and Hash for the password
+        const salt = await bcrypt.genSalt(10);
+        const securePassword = await bcrypt.hash(req.body.password, salt);
+        const saveData = new userSchema({
+            username : req.body.username,
+            email : req.body.password,
+            password : securePassword,
+        });
         saveData.save().then(() => {
             console.log(saveData);
         }).catch((err) => {
-            console.log(err);
+            console.log("error");
         });
     }
 
