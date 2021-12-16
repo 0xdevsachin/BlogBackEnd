@@ -100,7 +100,7 @@ router.delete('/deleteBlog/:id',userAuth, async function(req, res) {
     if(DeleteBlog.user.toString() !== req.user._id){
         return res.send("Not Allowed")
     }
-    await blog.deleteOne({ _id: req.params.id }).then(() => {
+    await blog.findByIdAndDelete({ _id: req.params.id }).then(() => {
         console.log("Blog Removed")
     }).catch((err) => {
         console.log(err);
