@@ -11,7 +11,7 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
         res.send({ msg: "Something Went Wrong !", redirect: true })
     });
     if (id) {
-        if (req.body.BlogTitle !== '' && req.body.BlogContent !== '') {
+        if (req.body.BlogTitle && req.body.BlogContent) {
             console.log(req.body.BlogTitle)
             var data = new blog({
                 BlogTitle : req.body.BlogTitle,
@@ -26,6 +26,8 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
             }).catch((err) => {
                 console.log(err);
             });
+        }else{
+            return res.send({msg : "Blog Title or Content Can't Be Empty", redirect: false})
         }
     } else {
         res.send({ msg: "Something Went Wrong !", redirect: true })
@@ -64,6 +66,30 @@ router.post('/getuserblog/:id', userAuth, async function(req, res) {
         res.send([])
     }
 })
+
+// Update blog Route
+router.put('/updateBlog/:id', userAuth, async (req,res) =>{
+    try {
+        var { BlogTitle, BlogContent, BlogImage } = req.body;
+        const UpdatedBlog = {};
+        // Setting values into new Object
+        if(BlogTitle) {UpdatedBlog.BlogTitle = BlogTitle}
+        if(BlogContent) {UpdatedBlog.BlogContent = BlogContent}
+        if(BlogImage){UpdatedBlog.BlogImage = BlogImage}
+        let NewBlog = await blog.findById(req.params.id);
+        if(!NewBlog){
+            return res.send("Blog not Exist !")
+        }
+        if(NewBlog.user.toString() !== req.user._id){
+            return res.send("Not Allowed")
+        }
+        const Blogdata = await blog.findByIdAndUpdate(req.params.id, {$set : UpdatedBlog})
+        res.send(Blogdata)
+    } catch (error) {
+        res.send("internal server error ")
+    }
+})
+
 
 // Delete Blog with Specific ID
 router.delete('/deleteBlog/:id',userAuth, async function(req, res) {
