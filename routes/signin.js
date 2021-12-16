@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 var userSchema = require('../models/user')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 
 router.post('/auth/signin', async function(req, res) {
@@ -20,10 +21,14 @@ router.post('/auth/signin', async function(req, res) {
             res.send({ msg: "Invalid Credentials", redirect: false })
         }
         else{
-            res.send({ msg: "Login Succesfully", user, redirect: true })
+            const data = {
+                user : user
+            }
+            const authtoken = jwt.sign(data, process.env.JWT_SECRET)
+            res.send({ msg: "Login Succesfully", user, authtoken, redirect: true })
         }
     } else {
-        res.send({ msg: "User Does not Exist", redirect: false })
+        res.send({ msg: "Invalid Credentials", redirect: false })
         console.log("User not exist ")
     }
 

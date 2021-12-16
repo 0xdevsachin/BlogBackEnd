@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router();
 var userSchema = require('../models/user')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 router.post('/auth/signup', async function(req, res) {
     console.log(req.body);
@@ -19,20 +20,25 @@ router.post('/auth/signup', async function(req, res) {
     } else if (req.body.password !== req.body.cpassword) {
         res.send("Password and Confirm Password must be same")
     } else {
-        res.send({ msg: "Account Registered Succesfully", redirect: true })
         //Generating Salt and Hash for the password
         const salt = await bcrypt.genSalt(10);
         const securePassword = await bcrypt.hash(req.body.password, salt);
+        
         const saveData = new userSchema({
             username : req.body.username,
             email : req.body.password,
             password : securePassword,
         });
-        saveData.save().then(() => {
+        await saveData.save().then(() => {
             console.log(saveData);
         }).catch((err) => {
             console.log("error");
         });
+        const data = {
+            user : saveData
+        }
+        const authtoken = jwt.sign(data, process.env.JWT_SECRET)
+        res.send({ msg: "Account Registered Succesfully",authtoken, redirect: true })
     }
 
 })
