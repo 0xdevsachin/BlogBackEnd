@@ -93,10 +93,18 @@ router.put('/updateBlog/:id', userAuth, async (req,res) =>{
 
 // Delete Blog with Specific ID
 router.delete('/deleteBlog/:id',userAuth, async function(req, res) {
+    let DeleteBlog = await blog.findById(req.params.id);
+    if(!DeleteBlog){
+        return res.send("Blog not Exist !")
+    }
+    if(DeleteBlog.user.toString() !== req.user._id){
+        return res.send("Not Allowed")
+    }
     await blog.deleteOne({ _id: req.params.id }).then(() => {
         console.log("Blog Removed")
     }).catch((err) => {
         console.log(err);
     })
+    res.send("Blog removed")
 })
 module.exports = router
