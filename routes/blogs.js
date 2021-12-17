@@ -12,7 +12,6 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
     });
     if (id) {
         if (req.body.BlogTitle && req.body.BlogContent) {
-            console.log(req.body.BlogTitle)
             var data = new blog({
                 BlogTitle : req.body.BlogTitle,
                 BlogContent : req.body.BlogContent,
@@ -77,13 +76,17 @@ router.put('/updateBlog/:id', userAuth, async (req,res) =>{
         if(BlogImage){UpdatedBlog.BlogImage = BlogImage}
         let NewBlog = await blog.findById(req.params.id);
         if(!NewBlog){
-            return res.send("Blog not Exist !")
+            return res.send({msg : "Blog not Exist !"})
         }
         if(NewBlog.user.toString() !== req.user._id){
-            return res.send("Not Allowed")
+            return res.send({msg : "Not Allowed"})
         }
-        const Blogdata = await blog.findByIdAndUpdate(req.params.id, {$set : UpdatedBlog})
-        res.status(200).send(Blogdata)
+        await blog.findByIdAndUpdate(req.params.id, {$set : UpdatedBlog}).then(() =>{
+            res.status(200).send({msg : "Blog Updated successFully"})
+        }).catch((err) =>{
+            res.status(400).send({msg : "Bad Request"})
+        })
+        
     } catch (error) {
         res.status(500).send("internal server error ")
     }
