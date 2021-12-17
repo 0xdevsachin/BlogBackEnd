@@ -21,7 +21,7 @@ db().then(() => {
 
 
 app.get('/', (req,res) =>{
-    res.status(200).json({msg : "Hello World!", port : PORT})
+    res.status(200).json({msg : "Hello World!"})
 })
 app.use('/api', signup);
 app.use('/api', signin);
