@@ -7,7 +7,7 @@ var userAuth = require('../middleware/userauth')
 // Saving the Blog 
 router.post('/PublishBlog', userAuth, async function(req, res) {
     var id = await userSchema.findOne({ _id: req.user._id }).catch((err) => {
-        console.log("Error !")
+        console.log(err)
         res.send({ msg: "Something Went Wrong !", redirect: true })
     });
     if (id) {
@@ -21,7 +21,7 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
                 user : req.user._id
             });
             data.save().then((result) => {
-                res.send({ msg: "Blog Published Successfully !", redirect: false })
+                res.status(200).send({ msg: "Blog Published Successfully !", redirect: false })
             }).catch((err) => {
                 console.log(err);
             });
@@ -37,19 +37,19 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
 
 router.get('/Getblog', async function(req, res) {
     const data = await blog.find();
-    res.send(data);
+    res.status(200).send(data);
 })
 
 
 // Get the specific blog with id 
 router.get('/Getblog/:id', async function(req, res) {
     const data = await blog.findOne({ _id: req.params.id }).catch((err) => {
-        console.log("Error !")
+        console.log(err)
     });
     if (!data) {
-        res.send({ msg: "Sorry! Blog Not Found", code: 404 })
+        res.status(404).send({ msg: "Sorry! Blog Not Found", code: 404 })
     } else {
-        res.send({ msg: data, code: 200 });
+        res.status(200).send({ msg: data, code: 200 });
     }
 })
 
@@ -60,7 +60,7 @@ router.post('/getuserblog', userAuth, async function(req, res) {
     });
     if (data) {
         const userBlogs = await blog.find({ user: req.user._id })
-        res.send(userBlogs);
+        res.status(200).send(userBlogs);
     }else{
         res.send([])
     }
@@ -83,9 +83,9 @@ router.put('/updateBlog/:id', userAuth, async (req,res) =>{
             return res.send("Not Allowed")
         }
         const Blogdata = await blog.findByIdAndUpdate(req.params.id, {$set : UpdatedBlog})
-        res.send(Blogdata)
+        res.status(200).send(Blogdata)
     } catch (error) {
-        res.send("internal server error ")
+        res.status(500).send("internal server error ")
     }
 })
 
@@ -95,19 +95,19 @@ router.delete('/deleteBlog/:id',userAuth, async function(req, res) {
     try {
         let DeleteBlog = await blog.findById(req.params.id);
     if(!DeleteBlog){
-        return res.send("Blog not Exist !")
+        return res.status(404).send("Blog not Exist !")
     }
     if(DeleteBlog.user.toString() !== req.user._id){
-        return res.send("Not Allowed")
+        return res.status(403).send("Not Allowed")
     }
     await blog.findByIdAndDelete({ _id: req.params.id }).then(() => {
         console.log("Blog Removed")
     }).catch((err) => {
         console.log(err);
     })
-    res.send("Blog removed")
+    res.status(200).send("Blog removed")
     } catch (error) {
-        res.send("Internal Server Error")
+        res.status(500).send("Internal Server Error")
     }
 })
 module.exports = router

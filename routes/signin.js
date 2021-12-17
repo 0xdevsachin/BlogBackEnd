@@ -18,18 +18,18 @@ router.post('/auth/signin', async function(req, res) {
         // comapring using Bcrypt JS
         const password = await bcrypt.compare(req.body.password, pass)
         if (!password) {
-            res.send({ msg: "Invalid Credentials", success: false })
+            res.status(401).send({ msg: "Invalid Credentials", success: false })
         }
         else{
             const data = {
                 user : user
             }
             // set Expiration time in JWT Token (Default : 5 minutes)
-            const authtoken = jwt.sign(data, process.env.JWT_SECRET, {expiresIn : process.env.Expires_IN || "300s"})
-            res.send({ msg: "Login Succesfully", authtoken, success: true })
+            const authtoken = jwt.sign(data, process.env.JWT_SECRET)
+            res.status(200).send({ msg: "Login Succesfully", authtoken, success: true })
         }
     } else {
-        res.send({ msg: "Invalid Credentials", success: false })
+        res.status(401).send({ msg: "Invalid Credentials", success: false })
         console.log("User not exist ")
     }
 
