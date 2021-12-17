@@ -21,7 +21,6 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
                 user : req.user._id
             });
             data.save().then((result) => {
-                console.log(result);
                 res.send({ msg: "Blog Published Successfully !", redirect: false })
             }).catch((err) => {
                 console.log(err);
@@ -61,7 +60,6 @@ router.post('/getuserblog', userAuth, async function(req, res) {
     });
     if (data) {
         const userBlogs = await blog.find({ user: req.user._id })
-        console.log(userBlogs);
         res.send(userBlogs);
     }else{
         res.send([])
