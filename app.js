@@ -19,7 +19,9 @@ db().then(() => {
     console.log(err);
 })
 
-
+app.get('/', (req,res) =>{
+    res.status(200).json({msg : "Hello World"})
+})
 app.use('/api', signup);
 app.use('/api', signin);
 app.use('/api', PublishBlog)
