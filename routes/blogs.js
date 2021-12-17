@@ -17,7 +17,7 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
                 BlogTitle : req.body.BlogTitle,
                 BlogContent : req.body.BlogContent,
                 BlogImage : req.body.BlogImage,
-                PublishName : req.body.PublishName,
+                PublishName : id.username,  
                 user : req.user._id
             });
             data.save().then((result) => {
@@ -55,12 +55,13 @@ router.get('/Getblog/:id', async function(req, res) {
 })
 
 // Dashboard Route
-router.post('/getuserblog/:id', userAuth, async function(req, res) {
-    const data = await userSchema.findOne({ _id: req.params.id }).catch((err) => {
+router.post('/getuserblog', userAuth, async function(req, res) {
+    const data = await userSchema.findOne({ _id: req.user._id }).catch((err) => {
         console.log("Error !")
     });
     if (data) {
-        const userBlogs = await blog.find({ user: req.params.id })
+        const userBlogs = await blog.find({ user: req.user._id })
+        console.log(userBlogs);
         res.send(userBlogs);
     }else{
         res.send([])

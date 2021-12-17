@@ -11,14 +11,14 @@ router.post('/auth/signin', async function(req, res) {
     })
 
     if (req.body.username === '' || req.body.password === '') {
-        res.send({ msg: "Something Went Wrong ", redirect: true })
+        res.send({ msg: "Input Field can't be Empty ", success: false })
     }
     if (user) {
         var pass = user.password
         // comapring using Bcrypt JS
         const password = await bcrypt.compare(req.body.password, pass)
         if (!password) {
-            res.send({ msg: "Invalid Credentials", redirect: false })
+            res.send({ msg: "Invalid Credentials", success: false })
         }
         else{
             const data = {
@@ -26,10 +26,10 @@ router.post('/auth/signin', async function(req, res) {
             }
             // set Expiration time in JWT Token (Default : 5 minutes)
             const authtoken = jwt.sign(data, process.env.JWT_SECRET, {expiresIn : process.env.Expires_IN || "300s"})
-            res.send({ msg: "Login Succesfully", user, authtoken, redirect: true })
+            res.send({ msg: "Login Succesfully", authtoken, success: true })
         }
     } else {
-        res.send({ msg: "Invalid Credentials", redirect: false })
+        res.send({ msg: "Invalid Credentials", success: false })
         console.log("User not exist ")
     }
 
