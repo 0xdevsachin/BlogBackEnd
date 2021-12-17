@@ -19,6 +19,7 @@ db().then(() => {
     console.log(err);
 })
 
+
 app.get('/', (req,res) =>{
     res.status(200).json({msg : "Hello World!"})
 })
