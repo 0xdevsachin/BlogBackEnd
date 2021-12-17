@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 var signup = require('./routes/signup')
 var signin = require('./routes/signin')
 var PublishBlog = require('./routes/blogs')
@@ -21,7 +21,7 @@ db().then(() => {
 
 
 app.get('/', (req,res) =>{
-    res.status(200).json({msg : "Hello World!"})
+    res.status(200).json({msg : "Hello World!", port : PORT})
 })
 app.use('/api', signup);
 app.use('/api', signin);
