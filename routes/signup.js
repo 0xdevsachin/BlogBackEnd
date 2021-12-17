@@ -24,7 +24,7 @@ router.post("/auth/signup", async function (req, res) {
   ) {
     res.send({ msg: "Something Went Wrong ", success: false });
   } else {
-    //Generating Salt and Hash for the password
+    //Generating Salt and Hash for the Password
     const salt = await bcrypt.genSalt(10);
     const securePassword = await bcrypt.hash(req.body.password, salt);
 
