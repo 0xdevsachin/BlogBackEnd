@@ -26,7 +26,7 @@ router.post("/auth/signin", async function (req, res) {
       };
       // set Expiration time in JWT Token 
       const JWT_SECRET = "THISISTHEJSONWEBTOKENFORTHISBLOGAPPLICATION"
-      const authtoken = jwt.sign(data, JWT_SECRET);
+      const authtoken = jwt.sign(data, JWT_SECRET, {expiresIn : '24h'});
       res
         .status(200)
         .send({ msg: "Login Succesfully", authtoken, success: true });
