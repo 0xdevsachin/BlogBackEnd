@@ -30,7 +30,7 @@ router.post("/auth/signup", async function (req, res) {
 
     const saveData = new userSchema({
       username: req.body.username,
-      email: req.body.password,
+      email: req.body.email,
       password: securePassword,
     });
     await saveData
