@@ -44,15 +44,13 @@ router.post("/auth/signup", async function (req, res) {
     const data = {
       user: saveData,
     };
-    const JWT_SECRET = "THISISTHEJSONWEBTOKENFORTHISBLOGAPPLICATION"
+    const JWT_SECRET = "THISISTHEJSONWEBTOKENFORTHISBLOGAPPLICATION";
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res
-      .status(200)
-      .send({
-        msg: "Account Registered Succesfully",
-        authtoken,
-        success: true,
-      });
+    res.status(200).send({
+      msg: "Account Registered Succesfully",
+      authtoken,
+      success: true,
+    });
   }
 });
 

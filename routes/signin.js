@@ -12,7 +12,7 @@ router.post("/auth/signin", async function (req, res) {
     });
 
   if (req.body.username === "" || req.body.password === "") {
-    res.send({ msg: "Input Field can't be Empty ", success: false });
+    res.send({ msg: "Input Field can't Be Empty ", success: false });
   }
   if (user) {
     var pass = user.password;
@@ -24,9 +24,9 @@ router.post("/auth/signin", async function (req, res) {
       const data = {
         user: user._id,
       };
-      // set Expiration time in JWT Token 
-      const JWT_SECRET = "THISISTHEJSONWEBTOKENFORTHISBLOGAPPLICATION"
-      const authtoken = jwt.sign(data, JWT_SECRET, {expiresIn : '24h'});
+      // set Expiration time in JWT Token
+      const JWT_SECRET = "THISISTHEJSONWEBTOKENFORTHISBLOGAPPLICATION";
+      const authtoken = jwt.sign(data, JWT_SECRET, { expiresIn: "24h" });
       res
         .status(200)
         .send({ msg: "Login Succesfully", authtoken, success: true });
