@@ -6,7 +6,7 @@ var userAuth = require('../middleware/userauth')
 
 // Saving the Blog 
 router.post('/PublishBlog', userAuth, async function(req, res) {
-    var id = await userSchema.findOne({ _id: req.user._id }).catch((err) => {
+    var id = await userSchema.findOne({ _id: req.user }).catch((err) => {
         console.log(err)
         res.send({ msg: "Something Went Wrong !", redirect: true })
     });
@@ -17,7 +17,7 @@ router.post('/PublishBlog', userAuth, async function(req, res) {
                 BlogContent : req.body.BlogContent,
                 BlogImage : req.body.BlogImage,
                 PublishName : id.username,  
-                user : req.user._id
+                user : req.user
             });
             data.save().then((result) => {
                 res.status(200).send({ msg: "Blog Published Successfully !", redirect: false })
@@ -54,11 +54,11 @@ router.get('/Getblog/:id', async function(req, res) {
 
 // Dashboard Route
 router.post('/getuserblog', userAuth, async function(req, res) {
-    const data = await userSchema.findOne({ _id: req.user._id }).catch((err) => {
+    const data = await userSchema.findOne({ _id: req.user }).catch((err) => {
         console.log("Error !")
     });
     if (data) {
-        const userBlogs = await blog.find({ user: req.user._id })
+        const userBlogs = await blog.find({ user: req.user })
         res.status(200).send(userBlogs);
     }else{
         res.send([])
@@ -78,7 +78,7 @@ router.put('/updateBlog/:id', userAuth, async (req,res) =>{
         if(!NewBlog){
             return res.send({msg : "Blog not Exist !"})
         }
-        if(NewBlog.user.toString() !== req.user._id){
+        if(NewBlog.user.toString() !== req.user){
             return res.send({msg : "Not Allowed"})
         }
         await blog.findByIdAndUpdate(req.params.id, {$set : UpdatedBlog}).then(() =>{
@@ -98,10 +98,10 @@ router.delete('/deleteBlog/:id',userAuth, async function(req, res) {
     try {
         let DeleteBlog = await blog.findById(req.params.id);
     if(!DeleteBlog){
-        return res.status(404).send("Blog not Exist !")
+        return res.status(200).send("Blog not Exist !")
     }
-    if(DeleteBlog.user.toString() !== req.user._id){
-        return res.status(403).send("Not Allowed")
+    if(DeleteBlog.user.toString() !== req.user){
+        return res.status(200).send("Not Allowed")
     }
     await blog.findByIdAndDelete({ _id: req.params.id }).then(() => {
         console.log("Blog Removed")

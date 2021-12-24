@@ -22,7 +22,7 @@ router.post("/auth/signin", async function (req, res) {
       res.status(200).send({ msg: "Invalid Credentials", success: false });
     } else {
       const data = {
-        user: user,
+        user: user._id,
       };
       // set Expiration time in JWT Token 
       const JWT_SECRET = "THISISTHEJSONWEBTOKENFORTHISBLOGAPPLICATION"
